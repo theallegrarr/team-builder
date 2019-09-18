@@ -31,3 +31,11 @@
     transform: rotate(360deg);
   }
 }
+
+a {
+  color: aqua;
+}
+
+a:hover{
+  color: lightgreen;
+}

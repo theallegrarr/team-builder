@@ -14,6 +14,7 @@ const formData = {name: '', age: '', skill: ''}
 function App() {
   const [ form, setForm ] = useState(formData);
   const [ team, setMembers ] = useState(teamList);
+  const [ memberToEdit, modifyMember ] = useState();
 
   const onAgeChange = e => {
     setForm({ name: form.name, age: e.target.value, skill: form.skill });
@@ -41,8 +42,19 @@ function App() {
     };
 
     const newTeamList = team.concat(newMember);
+
     setMembers(newTeamList);
     setForm(formData);
+  }
+
+  const onEdit = (e) => {
+    e.preventDefault();
+    const newList = team.filter(member => member.id !== e.target.id);
+    const newFormData = team.filter(member => member.id === e.target.id);
+
+    //console.log(e.target.id, ' ', newList, ' ', newFormData);
+    setMembers(newList);
+    setForm(newFormData[0]);
   }
 
   return (
@@ -53,13 +65,17 @@ function App() {
           onChange = {onAgeChange}
           onSkillChange = {onSkillChange}
           onNameChange = {onNameChange}
-          onSubmit={onFormSubmit}
+          onSubmit = {onFormSubmit}
           form = {form}
         />
         {
         team.map(member => (
           <h5 key={member.id}>
-            {member.name} is {member.age} years old and codes {member.skill}
+            {member.name} is {member.age} years old and codes {member.skill}  
+          <a
+            onClick = {onEdit} 
+            id = {member.id}
+          >  EDIT</a>
           </h5>
         ))
       }
@@ -83,13 +99,13 @@ function Form(props) {
   return (
     <form>
       <label htmlFor='nameInput'>Name: </label>
-      <input onChange={onNameChange} id='nameInput' type='text' /><br></br>
+      <input onChange={onNameChange} id='nameInput' type='text' value={form.name} /><br></br>
 
       <label htmlFor='ageInput'>Age: </label>
-      <input onChange={onChange} id='ageInput' type='text' /><br></br>
+      <input onChange={onChange} id='ageInput' type='text' value={form.age}/><br></br>
 
       <label htmlFor='skillInput'>Skill: </label>
-      <input onChange={onSkillChange} id='skillInput' type='text' /><br></br>
+      <input onChange={onSkillChange} id='skillInput' type='text' value={form.skill} /><br></br>
 
       <button
         disabled={isDisabled()}
